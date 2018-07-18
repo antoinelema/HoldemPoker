@@ -9,14 +9,14 @@ import java.util.Map;
 public class JoueurManager {
     static Joueur antoine = new Joueur("Antoine"); //
     static Joueur paul = new Joueur("Paul"); //
-    static Map<String, String> tblJoueur = new HashMap<String, String>();
+    static Map<String, Joueur> tblJoueur = new HashMap<String, Joueur>();
 
     static {
-        tblJoueur.put("1",antoine.getPseudo());
-        tblJoueur.put("2",paul.getPseudo());
+        tblJoueur.put("1",antoine);
+        tblJoueur.put("2",paul);
     }
 
-    public static Map<String,String> getTblJoueur(){
+    public static Map<String,Joueur> getTblJoueur(){
         return tblJoueur;
     }
 }

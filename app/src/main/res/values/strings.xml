@@ -5,4 +5,9 @@
     <string name="action_settings">Settings</string>
     <string name="btnJouer">Jouer</string>
     <string name="labelChoixJoueur">Choix du Joueur</string>
+
+    <string name="errSpinerJoueur">Un joueur doit etre selectioné</string>
+
+    <string name="jeuxActivity">ActivityJeux</string>
+    <string name="title_activity_jeux">JeuxActivity</string>
 </resources>

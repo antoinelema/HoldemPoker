@@ -1,28 +1,32 @@
 package com.example.alemariey.holdempoker;
 
 import android.app.Activity;
-import android.graphics.Color;
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.example.alemariey.holdempoker.model.Joueur;
 import com.example.alemariey.holdempoker.model.JoueurManager;
+import com.example.dbn.myapplication.JeuxActivity;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Map;
 
 import static com.example.alemariey.holdempoker.outils.Outils.chargePolices;
+import static com.example.alemariey.holdempoker.outils.Outils.makeToast;
 
-public class homeActivity extends Activity {
+public class HomeActivity extends Activity {
 
-    private ArrayList<String> joueurs = null;
+    private String TAG = "HOME";
+    private ArrayList<Joueur> joueurs = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,13 +34,9 @@ public class homeActivity extends Activity {
         setContentView(R.layout.activity_home);
 
 
-
         Spinner spinnerJoueur = (Spinner) this.findViewById(R.id.spinnerJoueur);
         chargeJoueurs();
         chargeSpinner(spinnerJoueur);
-
-
-
 
         stylise(); // Ajout des polices
     }
@@ -75,25 +75,44 @@ public class homeActivity extends Activity {
 //        chargePolices(this, spinnerItems);
         chargePolices(this, lblChoixJoueur);
         chargePolices(this, btnjouer);
+
+
     }
 
 
 
     public void chargeSpinner(Spinner spinner){
 
-
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.spinner_items, this.joueurs);
+        ArrayAdapter<Joueur> adapter = new ArrayAdapter<>(this,R.layout.spinner_items, this.joueurs);
         spinner.setAdapter(adapter);
-
-
-
     }
 
     private void chargeJoueurs() {
-        Map<String, String> conversionTable = JoueurManager.getTblJoueur();
-        this.joueurs = new ArrayList<String>(conversionTable.values());
+        Map<String, Joueur> conversionTable = JoueurManager.getTblJoueur();
+        this.joueurs = new ArrayList<>(conversionTable.values());
 
         // Tri des devises
-        Collections.sort(this.joueurs);
+//        Collections.sort(this.joueurs);
+    }
+
+    public void clique_jouer(View v){
+        Log.i(TAG, "clique_jouer ");
+
+        String text;
+        Spinner spinnerJoueur = (Spinner)findViewById(R.id.spinnerJoueur);
+        Joueur joueur =(Joueur)spinnerJoueur.getSelectedItem();
+
+        if (joueur.toString().isEmpty()){
+            text = getString(R.string.errSpinerJoueur);
+            makeToast(this,text);
+        }else {
+            //on commence à jouer
+            //intent
+            Intent intent = new Intent(HomeActivity.this, JeuxActivity.class);
+            // On affecte à l'Intent les données à passer
+            intent.putExtra("joueur",joueur);
+
+            startActivity(intent);
+        }
     }
 }

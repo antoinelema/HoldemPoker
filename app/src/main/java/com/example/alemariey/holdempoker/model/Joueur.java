@@ -1,9 +1,11 @@
 package com.example.alemariey.holdempoker.model;
 
+import java.io.Serializable;
+
 /**
  * Created by a.lemariey on 17/07/2018.
  */
-public class Joueur {
+public class Joueur implements Serializable{
     private String pseudo;
 
     public Joueur(String pseudo) {
@@ -18,5 +20,8 @@ public class Joueur {
         this.pseudo = pseudo;
     }
 
-
+    @Override
+    public String toString() {
+        return pseudo;
+    }
 }

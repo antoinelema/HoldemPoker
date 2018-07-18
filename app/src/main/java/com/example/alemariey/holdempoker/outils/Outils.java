@@ -23,4 +23,15 @@ public class Outils {
         textView.setTypeface(font);
     }
 
+    /**
+     * affiche un toast avec le texte passé en parametre
+     * @param context
+     * @param text
+     */
+    public static void makeToast(Context context,String text){
+        int duration = Toast.LENGTH_SHORT;
+        Toast toast = Toast.makeText(context, text, duration);
+        toast.show();
+    }
+
 }
