@@ -32,22 +32,23 @@ public class Carte {
             throw new CouleureException(e.getMessage());
         }
         this.poid = poid;
-        this.img=poid+couleur;
+        if (poid == 14){
+            this.img = couleur+1;
+        }else{
+            this.img=couleur+poid;
+        }
+
     }
 
     private String verifCouleur(String couleur)throws CouleureException {
 //        couleur = Normalizer.normalize(couleur, Normalizer.Form.NFD);
 //        couleur = (couleur.replaceAll("[\\p{InCombiningDiacriticalMarks}]", "")).toUpperCase();
-        Log.d("deck", couleur);
-        Log.d("deck", PIQUE);
 
         if (couleur != PIQUE && couleur != CARREAU && couleur != COEUR && couleur != TREFLE  ){
             throw new CouleureException("Carte invalide : la couleur doit etre [PIQUE,TREFLE,COEUR,CARREAU]");
         }
         return couleur;
     }
-
-
 
     public String getCouleur() {
         return couleur;
@@ -58,6 +59,15 @@ public class Carte {
     }
 
     public String getImg() {
-        return img;
+        return img.toLowerCase();
+    }
+
+    @Override
+    public String toString() {
+        return "Carte{" +
+                "couleur='" + couleur + '\'' +
+                ", poid=" + poid +
+                ", img='" + img + '\'' +
+                '}';
     }
 }
