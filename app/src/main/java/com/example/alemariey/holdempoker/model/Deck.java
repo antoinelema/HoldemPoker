@@ -3,9 +3,7 @@ package com.example.alemariey.holdempoker.model;
 import android.util.Log;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by a.lemariey on 18/07/2018.
@@ -136,7 +134,7 @@ public class Deck {
     }
 
     public static List<Carte> getDeck() {
-        Log.d(TAG, deck.get(1).getImg());
+        Log.d(TAG, deck.get(1).getImgName());
         return deck;
     }
 }

@@ -1,14 +1,10 @@
 package com.example.alemariey.holdempoker.model;
 
-import android.app.Application;
-import android.content.Context;
-import android.util.Log;
+import android.view.View;
+import android.widget.ImageView;
 
+import com.example.alemariey.holdempoker.R;
 import com.example.alemariey.holdempoker.exceptions.CouleureException;
-import com.example.alemariey.holdempoker.outils.Outils;
-import com.example.dbn.myapplication.JeuxActivity;
-
-import java.text.Normalizer;
 
 /**
  * Created by a.lemariey on 18/07/2018.
@@ -22,7 +18,8 @@ public class Carte {
 
     private String couleur;
     private int poid;
-    private String img;
+    private String imgName;
+    private ImageView vueImage;
 
     public Carte( String couleur, int poid) throws CouleureException {
 
@@ -33,9 +30,9 @@ public class Carte {
         }
         this.poid = poid;
         if (poid == 14){
-            this.img = couleur+1;
+            this.imgName = couleur+1;
         }else{
-            this.img=couleur+poid;
+            this.imgName = couleur+poid;
         }
 
     }
@@ -58,8 +55,16 @@ public class Carte {
         return poid;
     }
 
-    public String getImg() {
-        return img.toLowerCase();
+    public String getImgName() {
+        return imgName.toLowerCase();
+    }
+
+    public void setVueImage(ImageView vueImage){
+        this.vueImage = vueImage;
+    }
+
+    public ImageView getVueImage() {
+        return vueImage;
     }
 
     @Override
@@ -67,7 +72,7 @@ public class Carte {
         return "Carte{" +
                 "couleur='" + couleur + '\'' +
                 ", poid=" + poid +
-                ", img='" + img + '\'' +
+                ", imgName='" + imgName + '\'' +
                 '}';
     }
 }
