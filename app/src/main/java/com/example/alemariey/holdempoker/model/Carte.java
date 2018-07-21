@@ -9,7 +9,7 @@ import com.example.alemariey.holdempoker.exceptions.CouleureException;
 /**
  * Created by a.lemariey on 18/07/2018.
  */
-public class Carte {
+public class Carte implements  Comparable<Carte>{
     private static final String PIQUE = "PIQUE";
     private static final String TREFLE = "TREFLE";
     private static final String COEUR = "COEUR";
@@ -59,8 +59,9 @@ public class Carte {
         return imgName.toLowerCase();
     }
 
-    public void setVueImage(ImageView vueImage){
-        this.vueImage = vueImage;
+    public void setVueImage(ImageView vueCarte){
+
+        this.vueImage = vueCarte;
     }
 
     public ImageView getVueImage() {
@@ -74,5 +75,12 @@ public class Carte {
                 ", poid=" + poid +
                 ", imgName='" + imgName + '\'' +
                 '}';
+    }
+
+    @Override
+    public int compareTo(Carte compareCarte) {
+        int comparPoid = ((Carte)compareCarte).getPoid();
+
+        return comparPoid-this.getPoid();
     }
 }
