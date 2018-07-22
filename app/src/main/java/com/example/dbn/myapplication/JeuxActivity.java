@@ -2,9 +2,12 @@ package com.example.dbn.myapplication;
 
 import android.app.AlertDialog;
 import android.content.Intent;
+import android.graphics.Color;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -24,10 +27,11 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import static com.example.alemariey.holdempoker.outils.Outils.chargePolices;
+
 
 public class JeuxActivity extends AppCompatActivity {
     private String TAG = "JEUX";
-    private boolean jeux = true;
     private String action = "initial";
     private Joueur joueurH;
     private List<Carte>deck = new ArrayList<>(Deck.getDeck());
@@ -46,14 +50,10 @@ public class JeuxActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_jeux);
 
-
         getJoueurs();//recupere l'objet joueurH de l'intent
-        Button buttonBet = (Button) findViewById(R.id.buttonBet);
+
         deroulementPartie();//deroulement de la partie
-
     }
-
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -84,13 +84,20 @@ public class JeuxActivity extends AppCompatActivity {
         joueurH = (Joueur)intent.getSerializableExtra("joueur");
         //TODO ajouter recup nb d'ia et creer joueurs
 
+        Joueur ia = new Joueur("Albert");
+
         listJoueur.add(joueurH);
+        listJoueur.add(ia);
         afficheNomJoueur();
+
+
     }
 
     private void afficheNomJoueur(){
         TextView nomJoueur = (TextView)findViewById(R.id.txtNomJoueur);
         nomJoueur.setText(joueurH.getPseudo());
+
+        stylise();
     }
 
     private void deroulementPartie(){
@@ -99,7 +106,10 @@ public class JeuxActivity extends AppCompatActivity {
             case "initial":
                 melangeDeck();
                 distribution();
-                afficheMain();
+                for (Joueur joueur: listJoueur){
+                    afficheMain(joueur); //TODO transformer affiche main enset main et refair affichemain
+                }
+
 
                 break;
             case "flop":
@@ -122,6 +132,7 @@ public class JeuxActivity extends AppCompatActivity {
                     action = "fin";
                     deroulementPartie();
                 }
+                //TODO ajouter un case ou tout le monde montre ses cartes
                 break;
             case "fin":
                 determineGagant();
@@ -137,7 +148,7 @@ public class JeuxActivity extends AppCompatActivity {
 
 
         for (Joueur joueur:listJoueur){
-            joueur.reset();
+            joueur.reset();//remet les parametre du joueur a zero
         }
 
 
@@ -154,26 +165,26 @@ public class JeuxActivity extends AppCompatActivity {
     }
 
     private void distribution(){
-//        for (int i=0;i<2;i++){//distribution des cartes au joueurs une par une
-//            for (Joueur joueur: listJoueur){
-//                Carte carte = deck.get(indexCarte);
-//                joueur.addCarteInMain(carte);
-//                indexCarte ++;
-//            }
-//
-//        }
-        debugTestMain(); //// TODO enlever pour la fin du debug
-//        for(int i = 0 ; i<5;i++){//distribution des cartes au centre
-//            listCarteCentre.add(deck.get(indexCarte));
-//            indexCarte ++;
-//        }
-        debugTestCentre();//TODO a comment
+        for (int i=0;i<2;i++){//distribution des cartes au joueurs une par une
+            for (Joueur joueur: listJoueur){
+                Carte carte = deck.get(indexCarte);
+                joueur.addCarteInMain(carte);
+                indexCarte ++;
+            }
+
+        }
+//        debugTestMain(); //// TODO enlever pour la fin du debug
+        for(int i = 0 ; i<5;i++){//distribution des cartes au centre
+            listCarteCentre.add(deck.get(indexCarte));
+            indexCarte ++;
+        }
+//        debugTestCentre();//TODO a comment
     }
 
-    private void afficheMain(){
+    private void afficheMain(Joueur joueur){
 
-        Carte carteMain1 = joueurH.getMain().get(0);
-        Carte carteMain2 = joueurH.getMain().get(1);
+        Carte carteMain1 = joueur.getMain().get(0);
+        Carte carteMain2 = joueur.getMain().get(1);
 
         ImageView cardMain1   = (ImageView)findViewById(R.id.cardMain1);
         carteMain1.setVueImage(cardMain1);
@@ -239,8 +250,8 @@ public class JeuxActivity extends AppCompatActivity {
         int identifier = getResources().getIdentifier(carte.getImgName(), "drawable", getPackageName());//transforme le string en drawable
 
         vueCarte.setImageResource(identifier);
-        vueCarte.getLayoutParams().height=476;
-        vueCarte.getLayoutParams().width=314;
+//        vueCarte.getLayoutParams().height=476;
+//        vueCarte.getLayoutParams().width=314;
 
     }
 
@@ -473,6 +484,53 @@ public class JeuxActivity extends AppCompatActivity {
     }
 
 
+    private void stylise(){
+
+        TextView txtNomIa = (TextView) findViewById(R.id.txtNomIa);
+        TextView txtNomJoueur = (TextView) findViewById(R.id.txtNomJoueur);
+
+        Button btnBet = (Button) findViewById(R.id.buttonBet);
+        Button btnCheck = (Button) findViewById(R.id.buttonCheck);
+        Button btnFold = (Button) findViewById(R.id.buttonFold);
+
+        chargePolices(this, txtNomIa);
+        chargePolices(this, txtNomJoueur);
+
+        chargePolices(this, btnBet);
+        chargePolices(this, btnCheck);
+        chargePolices(this, btnFold);
+
+        txtNomIa.setTextColor(Color.WHITE);
+        txtNomJoueur.setTextColor(Color.WHITE);
+
+        int txtColorVert = ContextCompat.getColor(this, R.color.darkgreen);
+        btnBet.setTextColor(txtColorVert);
+
+        btnFold.setTextColor(Color.RED);
+
+        //size
+        btnBet.setTextSize(TypedValue.COMPLEX_UNIT_SP,30);
+        btnCheck.setTextSize(TypedValue.COMPLEX_UNIT_SP,30);
+        btnFold.setTextSize(TypedValue.COMPLEX_UNIT_SP,30);
+
+        txtNomIa.setTextSize(TypedValue.COMPLEX_UNIT_SP,25);
+        txtNomJoueur.setTextSize(TypedValue.COMPLEX_UNIT_SP,30);
+    }
+
+    private void debugTestMain(){
+        try {
+            Carte c1 = new Carte("PIQUE",13);
+            Carte c2 = new Carte("PIQUE",14);
+
+            joueurH.addCarteInMain(c1);
+            joueurH.addCarteInMain(c2);
+            
+        } catch (CouleureException e) {
+
+        }
+
+    }
+
     private void debugTestCentre(){
         try {
             Carte c1 = new Carte("PIQUE",14);
@@ -486,19 +544,6 @@ public class JeuxActivity extends AppCompatActivity {
             listCarteCentre.add(c3);
             listCarteCentre.add(c4);
             listCarteCentre.add(c5);
-        } catch (CouleureException e) {
-
-        }
-
-    }
-    private void debugTestMain(){
-        try {
-            Carte c1 = new Carte("PIQUE",13);
-            Carte c2 = new Carte("PIQUE",14);
-
-            joueurH.addCarteInMain(c1);
-            joueurH.addCarteInMain(c2);
-            
         } catch (CouleureException e) {
 
         }
