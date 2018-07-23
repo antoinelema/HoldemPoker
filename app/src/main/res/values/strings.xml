@@ -9,5 +9,7 @@
     <string name="errSpinerJoueur">Un joueur doit etre selectioné</string>
 
     <string name="jeuxActivity">ActivityJeux</string>
-    <string name="title_activity_jeux">JeuxActivity</string>
+    <string name="title_activity_jeux">Tapis de Jeux</string>
+
+    <string name="menu_quit">Quitter</string>
 </resources>

@@ -72,4 +72,10 @@ public class Joueur implements Serializable{
     public String toString() {
         return pseudo;
     }
+
+    public int compareTo(Joueur compareJoueur) {
+        int comparPoid = ((Joueur)compareJoueur).getPoint();
+
+        return comparPoid-this.getPoint();
+    }
 }

@@ -1,6 +1,7 @@
 package com.example.dbn.myapplication;
 
 import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.support.v4.content.ContextCompat;
@@ -8,9 +9,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -42,10 +47,13 @@ public class JeuxActivity extends AppCompatActivity {
     private int buttonPressed = 0;
 
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         Log.i(TAG, "Activité jeux");
+        getSupportActionBar().hide();
         indexCarte = 0;
 
         setContentView(R.layout.activity_jeux);
@@ -78,37 +86,48 @@ public class JeuxActivity extends AppCompatActivity {
     }
 
 
+
+
 //------------------------------------ Fonctions applicative ---------------------------------------
+
+    /**
+     * recupere le joueur et l'ia des l'intent
+     */
     private void getJoueurs() {
         Intent intent = getIntent();
         joueurH = (Joueur)intent.getSerializableExtra("joueur");
-        //TODO ajouter recup nb d'ia et creer joueurs
 
         Joueur ia = new Joueur("Albert");
 
         listJoueur.add(joueurH);
         listJoueur.add(ia);
         afficheNomJoueur();
-
-
     }
 
+    /**
+     * affiche le nom du joueur et de l'ia a coté de leur jeux respectif
+     */
     private void afficheNomJoueur(){
         TextView nomJoueur = (TextView)findViewById(R.id.txtNomJoueur);
-        nomJoueur.setText(joueurH.getPseudo());
+        TextView nomIa = (TextView)findViewById(R.id.txtNomIa);
+
+        nomJoueur.setText(listJoueur.get(0).getPseudo());
+        nomIa.setText(listJoueur.get(1).getPseudo());
 
         stylise();
     }
 
+    /**
+     * deroulement de la partie en fonction de la variable action
+     */
     private void deroulementPartie(){
 //        Log.d(TAG, "btnpresse" + buttonPressed);
         switch (action){
             case "initial":
                 melangeDeck();
                 distribution();
-                for (Joueur joueur: listJoueur){
-                    afficheMain(joueur); //TODO transformer affiche main enset main et refair affichemain
-                }
+
+                afficheMainJ(joueurH);
 
 
                 break;
@@ -124,6 +143,7 @@ public class JeuxActivity extends AppCompatActivity {
                 if (joueurH.isFold()){
                     action = "river";
                     deroulementPartie();
+
                 }
                 break;
             case "river":
@@ -132,24 +152,28 @@ public class JeuxActivity extends AppCompatActivity {
                     action = "fin";
                     deroulementPartie();
                 }
-                //TODO ajouter un case ou tout le monde montre ses cartes
                 break;
             case "fin":
+                afficheMainIA();
                 determineGagant();
-
         }
     }
+
+    /**
+     * initialise ou reinitialise les variables et les objets
+     */
     private void initial(){
         listCarteCentre = new ArrayList<>();
 
         indexCarte = 0;
         buttonPressed = 0;
 
-
-
         for (Joueur joueur:listJoueur){
+            afficheDos(joueur.getMain().get(0));
+            afficheDos(joueur.getMain().get(1));
             joueur.reset();//remet les parametre du joueur a zero
         }
+
 
 
         action = "initial";
@@ -164,6 +188,9 @@ public class JeuxActivity extends AppCompatActivity {
         Collections.shuffle(deck);
     }
 
+    /**
+     * distribue les cartes : 2 a chaque joueur puis 5 au centre
+     */
     private void distribution(){
         for (int i=0;i<2;i++){//distribution des cartes au joueurs une par une
             for (Joueur joueur: listJoueur){
@@ -171,17 +198,21 @@ public class JeuxActivity extends AppCompatActivity {
                 joueur.addCarteInMain(carte);
                 indexCarte ++;
             }
-
         }
-//        debugTestMain(); //// TODO enlever pour la fin du debug
+//        debugTestMain(listJoueur.get(1)); //// TODO enlever pour la fin du debug
         for(int i = 0 ; i<5;i++){//distribution des cartes au centre
             listCarteCentre.add(deck.get(indexCarte));
+
             indexCarte ++;
         }
 //        debugTestCentre();//TODO a comment
     }
 
-    private void afficheMain(Joueur joueur){
+    /**
+     * affiche la main du joueur
+     * @param joueur
+     */
+    private void afficheMainJ(Joueur joueur){
 
         Carte carteMain1 = joueur.getMain().get(0);
         Carte carteMain2 = joueur.getMain().get(1);
@@ -190,6 +221,24 @@ public class JeuxActivity extends AppCompatActivity {
         carteMain1.setVueImage(cardMain1);
         retourneCarte(carteMain1);
         ImageView cardMain2   = (ImageView)findViewById(R.id.cardMain2);
+        carteMain2.setVueImage(cardMain2);
+        retourneCarte(carteMain2);
+
+    }
+
+    /**
+     * affiche la main de l'ia
+     */
+    private void afficheMainIA(){
+        Joueur joueur = listJoueur.get(1);
+
+        Carte carteMain1 = joueur.getMain().get(0);
+        Carte carteMain2 = joueur.getMain().get(1);
+
+        ImageView cardMain1   = (ImageView)findViewById(R.id.carteIA1);
+        carteMain1.setVueImage(cardMain1);
+        retourneCarte(carteMain1);
+        ImageView cardMain2   = (ImageView)findViewById(R.id.carteIA2);
         carteMain2.setVueImage(cardMain2);
         retourneCarte(carteMain2);
 
@@ -219,7 +268,7 @@ public class JeuxActivity extends AppCompatActivity {
     /**
      * action du turn
      */
-    private void turn (){
+    private void turn() {
         Carte carteCentre4 = listCarteCentre.get(3);
 
         ImageView cardImage4   = (ImageView)findViewById(R.id.cardImage4);
@@ -238,7 +287,7 @@ public class JeuxActivity extends AppCompatActivity {
     }
 
     /**
-     * retourne la prochaine carte du deck
+     * affiche la face d'une carte
      * @param carte
      */
     private void retourneCarte(Carte carte){
@@ -250,23 +299,39 @@ public class JeuxActivity extends AppCompatActivity {
         int identifier = getResources().getIdentifier(carte.getImgName(), "drawable", getPackageName());//transforme le string en drawable
 
         vueCarte.setImageResource(identifier);
-//        vueCarte.getLayoutParams().height=476;
-//        vueCarte.getLayoutParams().width=314;
 
     }
 
+    /**
+     * affiche le dos de la carte passé en parametre
+     * @param carte
+     */
     public void afficheDos(Carte carte){
         carte.getVueImage().setImageResource(R.drawable.dos);
     }
-    
+
+    /**
+     * passe au tour suivant
+     * @param v
+     */
     public void clique_bet(View v){
+        clique_check(v);
+    }
+
+    /**
+     * passe au tour suivant
+     * @param v
+     */
+    public void clique_check(View v){
         buttonPressed++;
-        Outils.makeToast(this, buttonPressed + "bet");
         buttonPressed();
     }
 
 
-    
+    /**
+     * le joueur se couche pour le tour
+     * @param v
+     */
     public void clique_fold(View v){
         buttonPressed++;
 
@@ -278,6 +343,9 @@ public class JeuxActivity extends AppCompatActivity {
         buttonPressed();
     }
 
+    /**
+     * lance l'action corepondant au nombre de bouton (bet ou check) pressé
+     */
     private void buttonPressed(){
         if (buttonPressed == 1){
             action = "flop";
@@ -295,43 +363,113 @@ public class JeuxActivity extends AppCompatActivity {
         deroulementPartie();
     }
 
+    /**
+     * determine le gagnant en fonction du nombre de ses points
+     */
     private void determineGagant() {
 
+        String titre = "Fin du tour";
+        String msg = "";
+
         for (Joueur joueur : listJoueur){
-            comptePoints(joueur);
+            if (!joueur.isFold()){ //si le joueur n'est pas fold
+                comptePoints(joueur);
+            }
+
+        }
+        List<Joueur> winnerOrder = new ArrayList<>(listJoueur);
+        Log.d(TAG, winnerOrder.toString());
+
+        Collections.sort(winnerOrder, new Comparator<Joueur>() {
+            @Override
+            public int compare(Joueur j1, Joueur j2) {
+                return j1.compareTo(j2);
+            }
+        });
+
+        int nbEquals = isEquality(winnerOrder);
+
+        if (nbEquals>=1){
+            msg = "Les joueurs ";
+            for (int i = 0 ; i <= nbEquals; i++){
+                msg += winnerOrder.get(i).getPseudo() + ", ";
+            }
+            msg += "sont arrivés à egalité et se partagent le pot.";
+
+        }else {
+            msg = winnerOrder.get(0).getPseudo()+" gagne avec "+winnerOrder.get(0).getCombinaison();
         }
 
-        String titre = "Bravo";
-        String msg = "Vous avez gagné !";
 
         AlertDialog alertDialog = new AlertDialog.Builder(this).create();
         alertDialog.setTitle(titre);
         alertDialog.setMessage(msg);
+        alertDialog.setButton("Ok", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                for (Carte carteCentre : listCarteCentre) {//retourne les cartes du centre
+                    afficheDos(carteCentre);
+                }
+                initial();
+            }
+        });
 
-        for (Carte carteCentre : listCarteCentre) {//retourne les cartes du centre
 
-            afficheDos(carteCentre);
-        }
-        initial();
         // Set the Icon for the Dialog
         alertDialog.setIcon(R.drawable.ic_launcher_web);
+
+        alertDialog.setCancelable(false);
+
+        Window window = alertDialog.getWindow();
+        WindowManager.LayoutParams wlp = window.getAttributes();
+        wlp.gravity = Gravity.RIGHT|Gravity.BOTTOM;
+        wlp.flags &= ~WindowManager.LayoutParams.FLAG_DIM_BEHIND;
+        window.setAttributes(wlp);
+
         alertDialog.show();
+        
     }
 
+    /**
+     * recherche le nombre de joueur a egalité
+     * @param winnerOrder liste de joueur dans l'odre croissant de points
+     * @return nombre de joueur a egalité
+     */
+    private int isEquality(List<Joueur> winnerOrder) {
+        int nbEquality = 0 ;
 
+        for (int i = 0; i < winnerOrder.size();i++){
+
+
+            if (i< (winnerOrder.size()-1)){
+                if (winnerOrder.get(i).getPoint() == winnerOrder.get(i+1).getPoint()){
+
+                    nbEquality ++;
+                }
+            }
+
+        }
+        return nbEquality;
+    }
+
+    /**
+     * compte les point du joueur entré en parametre en fonction de ses cartes
+     * @param joueur
+     */
     private void comptePoints(Joueur joueur) {
         int pair = 0;
         int brelan = 0;
-        boolean carre = false;
         int pasSuite = 0;
-        boolean ace = false;
+        boolean ace = false; //si il y a un as
+        boolean carre = false;
+        boolean full = false;
         boolean quinteFlush = false;
 
         int point = 0;
-        String combinaison ="Carte haute";
+        String combinaison ="une Carte haute";
         List<Carte> lCarteSuite = new ArrayList<>();
 
-        List<Carte> lCarte = listCarteCentre;
+        List<Carte> lCarte = new ArrayList(listCarteCentre);
         lCarte.add(joueur.getMain().get(0));
         lCarte.add(joueur.getMain().get(1));
 
@@ -351,10 +489,10 @@ public class JeuxActivity extends AppCompatActivity {
             if (i<lCarte.size()-1){
                 if ((carte.getPoid() == lCarte.get(i+1).getPoid())&&!carre){ //verif pair
                     point = 100;
-                    combinaison = "Paire";
+                    combinaison = "une Paire";
 
                     if (pair >0 && !carre && brelan == 0) {
-                        combinaison = "Double Paire";
+                        combinaison = "une Double Paire";
 
                         point = 200;
                     }
@@ -365,13 +503,13 @@ public class JeuxActivity extends AppCompatActivity {
                         if ((carte.getPoid() == lCarte.get(i+1).getPoid())&&!carre){// verif brelan
                             brelan ++;
                             pair --;
-                            point = 200;
-                            combinaison = "Brelan";
+                            point = 300;
+                            combinaison = "un Brelan";
                             i++;
                             if (i<lCarte.size()-1) {
                                 if (carte.getPoid() == lCarte.get(i + 1).getPoid()) {//verif carré
-                                    point = 700;
-                                    combinaison = "Carre";
+                                    point = 800;
+                                    combinaison = "un Carre";
                                     carre = true;
                                     brelan --;
                                     i++;
@@ -385,13 +523,15 @@ public class JeuxActivity extends AppCompatActivity {
                 }
             }
         }
+
         if ((brelan>0 && pair>0) || (brelan >1)){
-            combinaison = "Full";
-            point = 600;
+            combinaison = "un Full";
+            full = true;
+            point = 700;
         }
 
-        if (combinaison != "Full" &&  !carre && isCouleur(lCarte)){//on cherche les couleurs
-            combinaison = "Couleur";
+        if (!full &&  !carre && isCouleur(lCarte)){//on cherche les couleurs
+            combinaison = "une Couleur";
             point = 600;
         }
 
@@ -413,10 +553,10 @@ public class JeuxActivity extends AppCompatActivity {
                     if (((card.getPoid() == 2) && (lCarteSuite.size() == 4) && ace)) { //si la derniere carte et 2 et qu'il y a un as
                         if (isCouleur(lCarte)){
 
-                            combinaison = "Quinte Flush";
-                            point = 800 + lCarteSuite.get(0).getPoid();
+                            combinaison = "une Quinte Flush";
+                            point = 900 + lCarteSuite.get(0).getPoid();
                         }else {
-                            combinaison = "suite";
+                            combinaison = "une suite";
                             point = 405; //plus petite suite
                         }
 
@@ -430,14 +570,14 @@ public class JeuxActivity extends AppCompatActivity {
 
                     if (isCouleur(lCarte)){
 
-                        combinaison = "Quinte Flush";
-                        point = 800 + lCarteSuite.get(0).getPoid();//jusqu'a 814
-                        if (point == 814){
-                            combinaison = "Quinte Flush Royal";
+                        combinaison = "une Quinte Flush";
+                        point = 900 + lCarteSuite.get(0).getPoid();//jusqu'a 914
+                        if (point == 914){
+                            combinaison = "une Quinte Flush Royal";
                             point = 1000;
                         }
                     }else {
-                        combinaison = "suite";
+                        combinaison = "une suite";
                         point = 400 + lCarteSuite.get(0).getPoid();//jusqu'a 414
                         break;
                     }
@@ -445,8 +585,15 @@ public class JeuxActivity extends AppCompatActivity {
             }
         }
 
+        if ((combinaison == "une Carte haute")||(brelan>0)||(pair>0)){ //l'addition des 5 plus haute cartes pour gerer les cas d'egalités
 
-        Log.d(TAG, combinaison);
+            for (int i=0; i<5 ; i++){
+                point += lCarte.get(i).getPoid();
+            }
+        }
+
+
+        Log.d(TAG, joueur.getPseudo() + " : " + combinaison);
         joueur.addPoint(point);
         joueur.setCombinaison(combinaison);
     }
@@ -483,7 +630,9 @@ public class JeuxActivity extends AppCompatActivity {
         return couleur;
     }
 
-
+    /**
+     * stylise le plateau de jeux
+     */
     private void stylise(){
 
         TextView txtNomIa = (TextView) findViewById(R.id.txtNomIa);
@@ -517,14 +666,20 @@ public class JeuxActivity extends AppCompatActivity {
         txtNomJoueur.setTextSize(TypedValue.COMPLEX_UNIT_SP,30);
     }
 
-    private void debugTestMain(){
+    private void debugTestMain(Joueur joueur){
         try {
-            Carte c1 = new Carte("PIQUE",13);
-            Carte c2 = new Carte("PIQUE",14);
+            Carte c1 = new Carte("PIQUE",14);
+            Carte c2 = new Carte("PIQUE",3);
 
             joueurH.addCarteInMain(c1);
             joueurH.addCarteInMain(c2);
-            
+
+            Carte c3 = new Carte("PIQUE",12);
+            Carte c4 = new Carte("PIQUE",14);
+
+            joueur.addCarteInMain(c3);
+            joueur.addCarteInMain(c4);
+
         } catch (CouleureException e) {
 
         }
@@ -533,11 +688,11 @@ public class JeuxActivity extends AppCompatActivity {
 
     private void debugTestCentre(){
         try {
-            Carte c1 = new Carte("PIQUE",14);
-            Carte c2 = new Carte("PIQUE",14);
-            Carte c3 = new Carte("PIQUE",10);
-            Carte c4 = new Carte("PIQUE",11);
-            Carte c5 = new Carte("PIQUE",12);
+            Carte c1 = new Carte("PIQUE",13);
+            Carte c2 = new Carte("COEUR",14);
+            Carte c3 = new Carte("CARREAU",10);
+            Carte c4 = new Carte("TREFLE",9);
+            Carte c5 = new Carte("PIQUE",4);
             listCarteCentre = new ArrayList<>();
             listCarteCentre.add(c1);
             listCarteCentre.add(c2);

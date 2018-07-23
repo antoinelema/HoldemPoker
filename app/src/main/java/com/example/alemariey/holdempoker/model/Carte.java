@@ -5,6 +5,7 @@ import android.widget.ImageView;
 
 import com.example.alemariey.holdempoker.R;
 import com.example.alemariey.holdempoker.exceptions.CouleureException;
+import com.example.dbn.myapplication.JeuxActivity;
 
 /**
  * Created by a.lemariey on 18/07/2018.
@@ -38,8 +39,6 @@ public class Carte implements  Comparable<Carte>{
     }
 
     private String verifCouleur(String couleur)throws CouleureException {
-//        couleur = Normalizer.normalize(couleur, Normalizer.Form.NFD);
-//        couleur = (couleur.replaceAll("[\\p{InCombiningDiacriticalMarks}]", "")).toUpperCase();
 
         if (couleur != PIQUE && couleur != CARREAU && couleur != COEUR && couleur != TREFLE  ){
             throw new CouleureException("Carte invalide : la couleur doit etre [PIQUE,TREFLE,COEUR,CARREAU]");

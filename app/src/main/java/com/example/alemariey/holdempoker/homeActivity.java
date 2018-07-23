@@ -4,7 +4,9 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.ContextMenu;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -32,7 +34,7 @@ public class HomeActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-
+        getActionBar().hide();
 
         Spinner spinnerJoueur = (Spinner) this.findViewById(R.id.spinnerJoueur);
         chargeJoueurs();
@@ -44,8 +46,10 @@ public class HomeActivity extends Activity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_home, menu);
-        return true;
+
+//        MenuInflater inflater = getMenuInflater();
+//        inflater.inflate(R.menu.menu_home, menu);
+        return false;
     }
 
     @Override
@@ -114,5 +118,9 @@ public class HomeActivity extends Activity {
 
             startActivity(intent);
         }
+    }
+
+    public void clique_quit(View v){
+        MyApplication.quit();
     }
 }
