@@ -1,0 +1,116 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:background="@drawable/tablepoker"
+    tools:context="com.example.dbn.myapplication.AddJetonsActivity">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Shop"
+        android:id="@+id/titreShop"
+        android:textSize="50dp"
+        android:layout_marginTop="29dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="+1000 jetons"
+        android:id="@+id/btn1000"
+        android:layout_centerVertical="true"
+        android:layout_toLeftOf="@+id/btn2001"
+        android:layout_toStartOf="@+id/btn2001"
+        android:onClick="clique_shop1000"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="+2001 jetons"
+        android:id="@+id/btn2001"
+        android:layout_alignTop="@+id/btn1000"
+        android:layout_centerHorizontal="true"
+        android:onClick="clique_shop2001"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="+3003 jetons"
+        android:id="@+id/btn3003"
+        android:layout_alignTop="@+id/btn2001"
+        android:layout_toRightOf="@+id/titreShop"
+        android:layout_toEndOf="@+id/titreShop"
+        android:onClick="clique_shop3003"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Acheter des jetons"
+        android:id="@+id/sousTitreAddJetons"
+        android:layout_marginBottom="34dp"
+        android:layout_above="@+id/lbl5"
+        android:layout_centerHorizontal="true"
+        android:textSize="34dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/shop5"
+        android:id="@+id/lbl5"
+        android:textSize="24dp"
+        android:layout_alignTop="@+id/lbl15"
+        android:layout_alignLeft="@+id/sousTitreAddJetons"
+        android:layout_alignStart="@+id/sousTitreAddJetons" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/shop10"
+        android:id="@+id/lbl10"
+        android:textSize="24dp"
+        android:layout_below="@+id/sousTitreAddJetons"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/shop15"
+        android:id="@+id/lbl15"
+        android:textSize="24dp"
+        android:layout_above="@+id/btn3003"
+        android:layout_alignRight="@+id/sousTitreAddJetons"
+        android:layout_alignEnd="@+id/sousTitreAddJetons" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/txtPseudoShop"
+        android:layout_above="@+id/sousTitreAddJetons"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:textSize="20dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/txtNbJetonShop"
+        android:layout_alignTop="@+id/sousTitreAddJetons"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:textSize="20dp" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Quitter"
+        android:id="@+id/retourHome"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="66dp"
+        android:onClick="clique_retourHome"/>
+</RelativeLayout>

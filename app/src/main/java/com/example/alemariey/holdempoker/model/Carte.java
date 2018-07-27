@@ -9,6 +9,8 @@ import com.example.dbn.myapplication.JeuxActivity;
 
 /**
  * Created by a.lemariey on 18/07/2018.
+ * class d'objet carte
+ *
  */
 public class Carte implements  Comparable<Carte>{
     private static final String PIQUE = "PIQUE";
@@ -17,10 +19,10 @@ public class Carte implements  Comparable<Carte>{
     private static final String CARREAU = "CARREAU";
 
 
-    private String couleur;
-    private int poid;
-    private String imgName;
-    private ImageView vueImage;
+    private String couleur; //couleur de la carte (pique trefle coeur ou carreau)
+    private int poid;// valeur de la carte de 2 à 14 (11 12 13 14 pour valet dame roi as)
+    private String imgName; //nom de l'image de la carte
+    private ImageView vueImage; //vue de la carte
 
     public Carte( String couleur, int poid) throws CouleureException {
 
@@ -38,6 +40,12 @@ public class Carte implements  Comparable<Carte>{
 
     }
 
+    /**
+     * verification que la couleur de la carte existe
+     * @param couleur
+     * @return la couleur
+     * @throws CouleureException
+     */
     private String verifCouleur(String couleur)throws CouleureException {
 
         if (couleur != PIQUE && couleur != CARREAU && couleur != COEUR && couleur != TREFLE  ){
@@ -76,6 +84,11 @@ public class Carte implements  Comparable<Carte>{
                 '}';
     }
 
+    /**
+     * compare 2 carte pour les ranger dans l'ordre decroissant de poids
+     * @param compareCarte
+     * @return
+     */
     @Override
     public int compareTo(Carte compareCarte) {
         int comparPoid = ((Carte)compareCarte).getPoid();

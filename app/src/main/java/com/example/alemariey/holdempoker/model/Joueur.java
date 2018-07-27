@@ -8,14 +8,16 @@ import java.util.List;
  * Created by a.lemariey on 17/07/2018.
  */
 public class Joueur implements Serializable{
-    private String pseudo;
-    private List<Carte> main;
-    private boolean fold;
-    private int point;
-    private String combinaison;
+    private String pseudo;// nom du joueur
+    private int nbJeton;// jetons du joueur
+    private List<Carte> main; //cartes dans la main du joueur
+    private boolean fold; //si le joueur est couché ou non
+    private int point; //point en fint de partie du joueur
+    private String combinaison; //combinaison (paire brelan quint ...) du joueur en fin de partie
 
-    public Joueur(String pseudo) {
+    public Joueur(String pseudo, int nbJeton) {
         this.pseudo = pseudo;
+        this.nbJeton = nbJeton;
         this.main = new ArrayList<>();
         this.fold = false;
         this.point = 0;
@@ -26,8 +28,16 @@ public class Joueur implements Serializable{
         return pseudo;
     }
 
-    public void setPseudo(String pseudo) {
-        this.pseudo = pseudo;
+    public int getNbJeton() {
+        return nbJeton;
+    }
+
+    public void addJeton(int nbJeton) {
+        this.nbJeton += nbJeton;
+    }
+
+    public void subJeton(int nbJeton) {
+        this.nbJeton -= nbJeton;
     }
 
     public List<Carte> getMain() {
@@ -59,7 +69,7 @@ public class Joueur implements Serializable{
     }
 
     public void addPoint(int point) {
-        this.point = point;
+        this.point += point;
     }
 
     public void reset() {
@@ -74,8 +84,8 @@ public class Joueur implements Serializable{
     }
 
     public int compareTo(Joueur compareJoueur) {
-        int comparPoid = ((Joueur)compareJoueur).getPoint();
+        int comparPoints = ((Joueur)compareJoueur).getPoint();
 
-        return comparPoid-this.getPoint();
+        return comparPoints-this.getPoint();
     }
 }
